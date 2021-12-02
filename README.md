@@ -1,5 +1,5 @@
 # Kidney
-Image segmentation for Glomerulus 
+Image segmentation for Glomerulus <from Kaggle: https://www.kaggle.com/c/hubmap-kidney-segmentation>
 
 Glomerulus in Kidney Tissue cell
 
