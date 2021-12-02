@@ -1,4 +1,6 @@
-# Kidney
+# Hacking the Kidney - Ryan Gifford, Kyeong Joo Jung, jinhee Lee
+---
+
 Image segmentation for Glomerulus <from Kaggle: https://www.kaggle.com/c/hubmap-kidney-segmentation >
 
 Glomerulus in Kidney Tissue cell
