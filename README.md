@@ -6,7 +6,7 @@ Glomerulus in Kidney Tissue cell
 
 ![GL](https://user-images.githubusercontent.com/54815470/144440171-dc12fbd0-1652-438a-85a9-cd45607934bc.png)
 
-My team implemented UNet, UNet with Residual blocks, UNet with Dense blocks models for the segmentation. <Unet for me>
+My team implemented UNet, UNet with Residual blocks, UNet with Dense blocks models for the segmentation. (Me: Unet)
 
 From Images,
 
