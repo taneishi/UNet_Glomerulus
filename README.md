@@ -11,7 +11,7 @@ From Images,
 
 ![그림1](https://user-images.githubusercontent.com/54815470/144440426-514ebe40-2212-4555-a87e-01e7aee2ddc3.png)
 
-models can extract Glomeruli
+Models can extract Glomeruli
 
 ![Untitled](https://user-images.githubusercontent.com/54815470/144440764-73221b80-b053-4ae6-a3a9-b03cd254b6d0.png)
 
