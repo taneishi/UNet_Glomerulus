@@ -1,6 +1,8 @@
-# Hacking the Kidney - Ryan Gifford, Kyeong Joo Jung, jinhee Lee
+# Hacking the Kidney 
 
 Image segmentation for Glomerulus <from Kaggle: https://www.kaggle.com/c/hubmap-kidney-segmentation >
+
+Team members: - Ryan Gifford, Kyeong Joo Jung, jinhee Lee
 
 Glomerulus in Kidney Tissue cell
 
