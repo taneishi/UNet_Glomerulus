@@ -17,8 +17,8 @@ def train_test_split():
     test_masks = list(masks_arr[[i for i in range(0,len(masks_arr)) if i not in use]])
 
 def main(densenet=True):
-    masks = sorted(glob.glob('results/masks/*'))
-    imgs = sorted(glob.glob('results/train/*'))
+    masks = sorted(glob.glob('data/masks/*'))
+    imgs = sorted(glob.glob('data/train/*'))
     train_X = []
     train_Y = []
     for i in range(len(masks)):
@@ -34,8 +34,8 @@ def main(densenet=True):
             img = img.reshape(256,256,1)
             train_X.append(img)
 
-    masks = sorted(glob.glob('results/test_masks/*'))
-    imgs = sorted(glob.glob('results/test/*'))
+    masks = sorted(glob.glob('data/test_masks/*'))
+    imgs = sorted(glob.glob('data/test/*'))
     test_X = []
     test_Y = []
     for i in range(len(masks)):
@@ -58,9 +58,9 @@ def main(densenet=True):
 
     print('train_X.shape', train_X.shape, 'test_X.shape', test_X.shape)
     plt.imshow(test_Y[14,...,0])
-    plt.savefig('test_Y_0.png')
+    plt.savefig('figure/test_Y_mask.png')
     plt.imshow(test_X[14,...])
-    plt.savefig('test_Y.png')
+    plt.savefig('figure/test_Y.png')
 
     print('train_X', len(train_X))
     print('test_X', len(test_X))
