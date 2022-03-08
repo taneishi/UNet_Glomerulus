@@ -59,10 +59,12 @@ def main(densenet=True):
     test_X = np.array(test_X, dtype=np.float32)
     test_Y = np.array(test_Y, dtype=np.float32)
 
-    plt.imshow(test_Y[14,...,0])
-    plt.savefig('figure/test_Y_mask.png')
+    plt.figure(figsize=(12,6))
+    plt.subplot(1, 2, 1)
     plt.imshow(test_X[14,...])
-    plt.savefig('figure/test_Y.png')
+    plt.subplot(1, 2, 2)
+    plt.imshow(test_Y[14,...,0])
+    plt.savefig('figure/test_XY.png')
 
     print('train_X', train_X.shape)
     print('test_X', test_X.shape)

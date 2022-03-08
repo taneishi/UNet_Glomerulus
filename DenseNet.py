@@ -7,10 +7,6 @@ from keras.optimizers import *
 from keras import backend as K
 from keras.callbacks import EarlyStopping
 from keras import activations
-from tensorflow.python.client import device_lib
-
-print(device_lib.list_local_devices())
-print(tf.config.list_physical_devices('GPU'))
 
 def dice_loss(smooth=1e-5):
     def dice(y_true, y_pred):
@@ -35,39 +31,39 @@ def dice_coef_inverse(y_true, y_pred, smooth=1):
 
 def dense_block(inputs, filter_size):
     filter_size_4 = np.int16(filter_size/4)
-    conv1 = Conv2D(filter_size_4, 3, padding = 'same',activation = 'relu', kernel_initializer = 'he_normal')(inputs)
+    conv1 = Conv2D(filter_size_4, 3, padding='same', activation='relu', kernel_initializer='he_normal')(inputs)
     
-    conv2 = Conv2D(filter_size_4, 3, padding = 'same',activation = 'relu', kernel_initializer = 'he_normal')(
+    conv2 = Conv2D(filter_size_4, 3, padding='same',activation='relu', kernel_initializer='he_normal')(
         concatenate([inputs,conv1]))
-    conv3 = Conv2D(filter_size_4, 3, padding = 'same',activation = 'relu', kernel_initializer = 'he_normal')(
+
+    conv3 = Conv2D(filter_size_4, 3, padding='same',activation='relu', kernel_initializer='he_normal')(
         concatenate([inputs,conv1,conv2]))
     
-    output = Conv2D(filter_size, 3, padding = 'same',activation = 'relu', kernel_initializer = 'he_normal')(
+    output = Conv2D(filter_size, 3, padding='same', activation='relu', kernel_initializer='he_normal')(
         concatenate([inputs,conv1,conv2,conv3]))
     
     return output
 
-def get_down_block(inputs, filter_size, k = (3,3),choke = False):
+def get_down_block(inputs, filter_size, k=(3,3), choke=False):
     #feature_map = Conv2D(filter_size, 3, padding='same', activation='relu', kernel_initializer='he_normal')(inputs)
     feature_map = dense_block(inputs,filter_size )
 
     if choke:
         return feature_map
     else:
-        pool = MaxPooling2D(pool_size=(2,2), 
-                            strides = (2,2),padding = 'same')(feature_map)
+        pool = MaxPooling2D(pool_size=(2,2), strides=(2,2), padding='same')(feature_map)
         return feature_map,pool
 
-def get_up_block(inputs,merge,filter_size, k = (3,3)):
-    up = Conv2DTranspose(filter_size, (2,2),strides = (2,2),activation = 'relu', padding = 'same',
-                           kernel_initializer = 'he_normal')(inputs)
+def get_up_block(inputs,merge,filter_size, k=(3,3)):
+    up = Conv2DTranspose(filter_size, (2,2), strides=(2,2), activation='relu', padding='same',
+                           kernel_initializer='he_normal')(inputs)
     merge = concatenate([up,merge],axis = 3)
     
     #feature_map = Conv2D(filter_size, 3, padding='same', kernel_initializer='he_normal', activation='relu')(merge)
-    feature_map = dense_block(merge,filter_size )
+    feature_map = dense_block(merge, filter_size)
     return feature_map
 
-def res_unet(input_shape = (256,256,1),lr = .0001, depth_before_choke = 4):
+def res_unet(input_shape=(256,256,1), lr=.0001, depth_before_choke=4):
     inputs = Input(input_shape)
     filters = [32]
     for i in range(0,depth_before_choke):
@@ -83,7 +79,7 @@ def res_unet(input_shape = (256,256,1),lr = .0001, depth_before_choke = 4):
         blocks.append(block)
         
     # choke block
-    block = get_down_block(pool, filters[len(filters)-1], choke = True)
+    block = get_down_block(pool, filters[len(filters)-1], choke=True)
     
     # upsampling 
     filters = np.flip(filters)
@@ -94,7 +90,7 @@ def res_unet(input_shape = (256,256,1),lr = .0001, depth_before_choke = 4):
     output = Conv2D(1, 1, activation='relu', padding='same')(block)
     model = Model(inputs=inputs, outputs=output)
     model_dice = dice_loss(smooth=1e-5)
-    model.compile(optimizer=Adam(lr = lr), loss=model_dice, metrics=[dice_coef, dice_coef_inverse])    
+    model.compile(optimizer=Adam(lr=lr), loss=model_dice, metrics=[dice_coef, dice_coef_inverse])    
     return model
         
 model = res_unet(lr=.00005)

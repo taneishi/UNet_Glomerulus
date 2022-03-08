@@ -3,13 +3,7 @@ import tensorflow as tf
 from tensorflow.keras.models import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
-
 from keras.callbacks import EarlyStopping
-
-from tensorflow.python.client import device_lib
-print(device_lib.list_local_devices())
-
-tf.test.is_gpu_available()
 
 def Unet(pretrained_weights=None, lr=.01, input_shape=(256,256,1)):    
     inputs = Input(input_shape) # input has size 256x256x1
@@ -108,7 +102,7 @@ def Unet(pretrained_weights=None, lr=.01, input_shape=(256,256,1)):
     print('conv10:', conv10.shape)    
     
     model = Model(inputs = inputs, outputs = conv10)
-    model.compile(optimizer = Adam(lr=lr), loss='binary_crossentropy', metrics=[dice_coef])
+    model.compile(optimizer=Adam(lr=lr), loss='binary_crossentropy', metrics=[dice_coef])
     if pretrained_weights != None:
         model.set_weights(pretrained_weights)    
     
