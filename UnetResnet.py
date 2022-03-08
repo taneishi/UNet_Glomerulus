@@ -1,34 +1,20 @@
-import cv2
 import matplotlib.pyplot as plt
-import numpy as np
-import glob
-import math
-import os
 import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import History 
-from keras.callbacks import CSVLogger, EarlyStopping
+from keras.callbacks import EarlyStopping
 from tensorflow.keras.models import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
-from tensorflow.keras import backend as K
 from tensorflow.python.client import device_lib
+
 print(device_lib.list_local_devices())
 print(tf.config.list_physical_devices('GPU'))
 
 tf.test.is_gpu_available()
 
-#for i in range(0,len(test)):
-#    f_name = test[i].split('/')[3]
-#    print(f_name)
-#    os.rename(test[i], 'data/test/' + f_name)
-#    os.rename(test_masks[i], 'data/test_masks/' + f_name)
-
 def residual_block(inputs,num):
-    co1 = Conv2D(num, 3, padding = 'same', kernel_initializer = 'he_normal')(inputs)
+    co1 = Conv2D(num, 3, padding='same', kernel_initializer='he_normal')(inputs)
     co1 = ReLU()(co1)
-    co2 = Conv2D(num, 3, padding = 'same', kernel_initializer = 'he_normal')(co1)
+    co2 = Conv2D(num, 3, padding='same', kernel_initializer='he_normal')(co1)
     output = add([co1, co2])
     output = ReLU()(output)
     return output
@@ -71,68 +57,63 @@ def vanilla_unet(pretrained_weights = None,lr = .01,input_size = (256,256,1)):
     conv6 = residual_block(conv6, 1024)
     print('conv6: ',conv6.shape) 
         
-    up7 = Conv2D(512, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv6))
+    up7 = Conv2D(512, 2, activation='relu', padding='same', kernel_initializer='he_normal')(UpSampling2D(size = (2,2))(conv6))
     merge7 = concatenate([conv5,up7], axis = 3)
      
     # depth 4
-    conv7 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge7)
-    conv7 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv7)
+    conv7 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge7)
+    conv7 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv7)
     print('up7:', up7.shape)
     print('conv7', conv7.shape)
     
-    up8 = Conv2D(256, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv7))
+    up8 = Conv2D(256, 2, activation='relu', padding='same', kernel_initializer='he_normal')(UpSampling2D(size = (2,2))(conv7))
     merge8 = concatenate([conv4,up8], axis = 3)
     
     # depth 3
-    conv8 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge8)
-    conv8 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv8)
+    conv8 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge8)
+    conv8 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv8)
     print('up8:', up8.shape)
     print('conv8', conv8.shape)
     
-    up9 = Conv2D(128, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv8))
+    up9 = Conv2D(128, 2, activation='relu', padding='same', kernel_initializer='he_normal')(UpSampling2D(size = (2,2))(conv8))
     merge9 = concatenate([conv3,up9], axis = 3)
     
     # depth 2
-    conv9 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
-    conv9 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
+    conv9 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge9)
+    conv9 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     
     print('up9:', up9.shape)
     print('conv9', conv9.shape)
     
-    up10 = Conv2D(64, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv9))
+    up10 = Conv2D(64, 2, activation='relu', padding='same', kernel_initializer='he_normal')(UpSampling2D(size = (2,2))(conv9))
     merge10 = concatenate([conv2,up10], axis = 3)
     
     # depth 1
-    conv10 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge10)
-    conv10 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv10)
+    conv10 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge10)
+    conv10 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv10)
     print('up10:', up10.shape)
     print('conv10', conv10.shape)
     
-    up11 = Conv2D(32, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv10))
+    up11 = Conv2D(32, 2, activation='relu', padding='same', kernel_initializer='he_normal')(UpSampling2D(size = (2,2))(conv10))
     merge11 = concatenate([conv1,up11], axis = 3)
     
     # depth 0
-    conv10 = Conv2D(32, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge11)
-    conv10 = Conv2D(32, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv10)
-    conv10 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv10)
-    conv11 = Conv2D(1, 1, activation = 'sigmoid')(conv10)
+    conv10 = Conv2D(32, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge11)
+    conv10 = Conv2D(32, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv10)
+    conv10 = Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv10)
+    conv11 = Conv2D(1, 1, activation='sigmoid')(conv10)
     print('up11:', up11.shape)
     print('conv11', conv11.shape)
     
-    model = Model(inputs = inputs, outputs = conv11)
-    model.compile(optimizer = Adam(lr = lr), loss = 'binary_crossentropy', metrics=[dice_coef])
+    model = Model(inputs=inputs, outputs=conv11)
+    model.compile(optimizer=Adam(lr=lr), loss='binary_crossentropy', metrics=[dice_coef])
     if pretrained_weights != None:
         model.set_weights(pretrained_weights)
     return model
 
 model = vanilla_unet(lr=.00005)
-history = History()
-csv_logger = CSVLogger('training_res_unet.csv', append = True)
-checkpoint = ModelCheckpoint('best_res_unet.hdf5', monitor='val_dice_coef_inverse', verbose=1,
-    save_best_only=True, mode='auto', period=1)
 callback = tf.keras.callbacks.EarlyStopping(monitor='val_dice_coef_inverse', patience=3)
-print(train_X.shape, train_Y.shape)
-model.fit(train_X,train_Y , epochs=100, batch_size = 10,verbose = 1, validation_data = (test_X,test_Y), callbacks=[callback,checkpoint,history,csv_logger])
+model.fit(train_X, train_Y, epochs=100, batch_size=10, verbose=1, validation_data=(test_X, test_Y), callbacks=[callback])
 
 fit = model.predict(test_X)
 

@@ -1,25 +1,16 @@
-import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import glob
-import math
-import os
 import tensorflow as tf
-from keras.preprocessing.image import ImageDataGenerator
 from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
 from keras import backend as K
+from keras.callbacks import EarlyStopping
+from keras import activations
 from tensorflow.python.client import device_lib
 
 print(device_lib.list_local_devices())
 print(tf.config.list_physical_devices('GPU'))
-
-import tensorflow as tf
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import History 
-from keras.callbacks import CSVLogger, EarlyStopping
-from keras import activations
 
 def dice_loss(smooth=1e-5):
     def dice(y_true, y_pred):
@@ -97,24 +88,18 @@ def res_unet(input_shape = (256,256,1),lr = .0001, depth_before_choke = 4):
     # upsampling 
     filters = np.flip(filters)
     blocks = np.flip(blocks)
-    for i in range(1,depth_before_choke+1):
-        block = get_up_block(block,blocks[i-1],filters[i])
+    for i in range(1, depth_before_choke+1):
+        block = get_up_block(block,blocks[i-1], filters[i])
 
-    output = Conv2D(1, 1, activation = 'relu', padding = 'same')(block)
+    output = Conv2D(1, 1, activation='relu', padding='same')(block)
     model = Model(inputs=inputs, outputs=output)
-    model_dice=dice_loss(smooth=1e-5)
-    model.compile(optimizer = Adam(lr = lr), loss = model_dice, metrics=[dice_coef,dice_coef_inverse])    
+    model_dice = dice_loss(smooth=1e-5)
+    model.compile(optimizer=Adam(lr = lr), loss=model_dice, metrics=[dice_coef, dice_coef_inverse])    
     return model
         
 model = res_unet(lr=.00005)
-history = History()
-csv_logger = CSVLogger('training_res_unet.csv', append = True)
-checkpoint = ModelCheckpoint('best_res_unet.hdf5', monitor='val_dice_coef_inverse', verbose=1,
-    save_best_only=True, mode='auto', period=1)
 callback = tf.keras.callbacks.EarlyStopping(monitor='val_dice_coef_inverse', patience=3)
-model.fit(train_X,train_Y, epochs = 100, batch_size = 10,verbose = 1,
-        validation_data = (test_X,test_Y),
-          callbacks=[callback,checkpoint,history,csv_logger])
+model.fit(train_X, train_Y, epochs=100, batch_size=10, verbose=1, validation_data=(test_X, test_Y), callbacks=[callback])
 
 fit = model.predict(test_X)
 
