@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import torch
 import cv2
 import glob
 import math
@@ -20,6 +21,8 @@ def train_test_split(imgs, masks):
     return train, train_masks, test, test_masks
 
 def main(densenet=True):
+    #train_test_split(imgs, masks)
+
     masks = sorted(glob.glob('data/masks/*'))
     imgs = sorted(glob.glob('data/train/*'))
     train_X = []
@@ -69,7 +72,11 @@ def main(densenet=True):
     print('train_X', train_X.shape)
     print('test_X', test_X.shape)
 
-    return train_X, train_Y, test_X, test_Y
+    torch.save({'train_X': train_X,
+        'train_Y': train_Y,
+        'test_X': test_X,
+        'test_Y': test_Y,
+        }, 'dataset.pt')
 
 if __name__ == '__main__':
     main()
