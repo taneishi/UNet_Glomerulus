@@ -33,7 +33,7 @@ def get_up_block(inputs,merge,filter_size, k=(3,3)):
     feature_map = dense_block(merge, filter_size)
     return feature_map
 
-def res_unet(input_shape=(256, 256, 1), lr=.0001, depth_before_choke=4):
+def densenet(input_shape=(256, 256, 1), lr=.0001, depth_before_choke=4):
     inputs = Input(input_shape)
     filters = [32]
 
@@ -66,17 +66,18 @@ def res_unet(input_shape=(256, 256, 1), lr=.0001, depth_before_choke=4):
 
     return model
 
-train_X, train_Y, test_X, test_Y = data_load()
+train_X, train_Y = data_load('train_list.txt')
+test_X, test_Y = data_load('test_list.txt')
         
-model = res_unet(lr=.00005)
+model = densenet(lr=.00005)
 model.fit(train_X, train_Y, epochs=100, batch_size=10, verbose=1, validation_data=(test_X, test_Y))
 
 fit = model.predict(test_X)
 
 for i in range(0,len(fit)):
     plt.imshow(fit[i,...,0])
-    plt.savefig('DenseNet1.png')
+    plt.savefig('figure/DenseNet1.png')
     plt.imshow(test_X[i,...,0])
-    plt.savefig('DenseNet2.png')
+    plt.savefig('figure/DenseNet2.png')
     plt.imshow(test_Y[i,...,0])
-    plt.savefig('DenseNet3.png')
+    plt.savefig('figure/DenseNet3.png')

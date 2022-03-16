@@ -110,7 +110,8 @@ def Unet(pretrained_weights=None, learning_rate=.01, input_shape=(256, 256, 1)):
 
     return model
 
-train_X, train_Y, test_X, test_Y = data_load()
+train_X, train_Y = data_load('train_list.txt')
+test_X, test_Y = data_load('test_list.txt')
 
 #model = Unet(learning_rate=.05)
 model = Unet(learning_rate=.00005)

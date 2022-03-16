@@ -108,7 +108,8 @@ def vanilla_unet(pretrained_weights=None, lr=.01, input_size=(256,256,1)):
 
     return model
 
-train_X, train_Y, test_X, test_Y = data_load()
+train_X, train_Y = data_load('train_list.txt')
+test_X, test_Y = data_load('test_list.txt')
 
 model = vanilla_unet(lr=.00005)
 model.fit(train_X, train_Y, epochs=100, batch_size=10, verbose=1, validation_data=(test_X, test_Y))
