@@ -1,4 +1,5 @@
 keras
 tensorflow-gpu
-matplotlib
 opencv-python
+matplotlib
+pandas
