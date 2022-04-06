@@ -9,7 +9,6 @@ test_X, test_Y = data_load('test_list.txt')
 print(train_X.shape, train_Y.shape)
 print(test_X.shape, test_Y.shape)
 
-#model = Unet(lr=.05)
 model = Unet(lr=.00005)
 
 model.compile(optimizer=Adam(lr=lr), loss='binary_crossentropy', metrics=[dice_coef])
