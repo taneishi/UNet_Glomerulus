@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
-import cv2
+from torchvision import transforms
+from PIL import Image
 
 class KidneyDataset(Dataset):
     def __init__(self, phase, densenet=False, transform=None):
@@ -14,20 +15,14 @@ class KidneyDataset(Dataset):
         self.masks = []
 
         for image_name, mask_name in zip(self.image_names, self.mask_names):
-            mask = cv2.imread(mask_name, cv2.IMREAD_GRAYSCALE)
-            mask = mask.reshape(256, 256, 1)
+            mask = Image.open(mask_name).convert('L') # convert to grayscale
 
             if np.sum(mask) > 0: # only take patches which are a 1
                 self.masks.append(mask)
-                image = cv2.imread(image_name, cv2.IMREAD_GRAYSCALE)
-                image = image / 255
+                image = Image.open(image_name).convert('RGB')
                 if densenet:
                     image = -1 * (image - np.max(image))
-                image = image.reshape(256, 256, 1)
                 self.images.append(image)
-
-        #X = np.array(X, dtype=np.float32)
-        #Y = np.array(Y, dtype=np.float32)
 
         self.transform = transform
 
@@ -39,25 +34,30 @@ class KidneyDataset(Dataset):
         mask = self.masks[index]
         if self.transform:
             image = self.transform(image)
+            mask = self.transform(mask)
 
         return image, mask
 
 if __name__ == '__main__':
-    train_set = KidneyDataset('train')
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        ])
+
+    train_set = KidneyDataset('train', transform=transform)
     train_loader = DataLoader(train_set, batch_size=1, shuffle=True, num_workers=0)
 
-    test_set = KidneyDataset('test')
-    test_loader = DataLoader(test_set, batch_size=1, shuffle=False, num_workers=0)
+    test_set = KidneyDataset('test', transform=transform)
+    test_loader = DataLoader(test_set, batch_size=5, shuffle=False, num_workers=0)
 
     print('train set', len(train_set), 'test set', len(test_set))
 
-    for image, mask in train_loader:
-        print(image.shape, mask.shape)
+    for images, masks in test_loader:
+        print(images.shape, masks.shape)
         plt.figure(figsize=(12, 6))
         plt.subplot(1, 2, 1)
-        plt.imshow(image.reshape(256, 256, 1))
+        plt.imshow(images[4].numpy().transpose(1, 2, 0))
         plt.subplot(1, 2, 2)
-        plt.imshow(mask.reshape(256, 256, 1))
+        plt.imshow(masks[4].numpy().transpose(1, 2, 0))
         plt.savefig('figure/input.png')
 
         break
