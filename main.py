@@ -101,6 +101,7 @@ def main(args):
         plt.imshow(masks[4].numpy().transpose(1, 2, 0))
         plt.subplot(1, 3, 3)
         plt.imshow(outputs[4].detach().cpu().numpy().transpose(1, 2, 0))
+        plt.tight_layout()
         plt.savefig('figure/output.png')
 
         break

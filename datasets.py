@@ -58,6 +58,7 @@ if __name__ == '__main__':
         plt.imshow(images[4].numpy().transpose(1, 2, 0))
         plt.subplot(1, 2, 2)
         plt.imshow(masks[4].numpy().transpose(1, 2, 0))
+        plt.tight_layout()
         plt.savefig('figure/input.png')
 
         break
