@@ -1,5 +1,4 @@
 keras
-tensorflow-gpu
-opencv-python
+torchvision
 matplotlib
 pandas
