@@ -1,4 +1,4 @@
-# Glomerular Segmentation of Kidney images with U-Net using PyTorch
+# Glomerular Segmentation of Kidney Images using U-Net
 
 ## Introduction
 

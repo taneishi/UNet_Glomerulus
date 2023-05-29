@@ -2,6 +2,6 @@
 
 mkdir -p figure model
 
-pip install -r requirements.txt
+pip install -qr requirements.txt
 
 python main.py

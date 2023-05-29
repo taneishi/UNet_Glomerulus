@@ -1,4 +1,3 @@
-keras
 torchvision
 matplotlib
 pandas

@@ -11,9 +11,7 @@ class KidneyDataset(Dataset):
         self.image_names = ['data/imgs/%s' % (image_name) for image_name in df[0]]
         self.mask_names = ['data/masks/%s' % (mask_name) for mask_name in df[0]]
 
-        self.images = []
-        self.masks = []
-
+        self.images, self.masks = [], []
         for image_name, mask_name in zip(self.image_names, self.mask_names):
             mask = Image.open(mask_name).convert('L') # convert to grayscale
 
