@@ -91,7 +91,7 @@ def main(args):
     test_set = KidneyDataset('test', transform=transform)
     test_loader = DataLoader(test_set, batch_size=5, shuffle=False, num_workers=0)
 
-    for images, masks in test_loader:
+    for index, (images, masks) in enumerate(test_loader, 1):
         images = images.to(device)
         outputs = net(images)
         print(outputs.shape)
@@ -108,9 +108,10 @@ def main(args):
         plt.imshow(outputs[4].detach().cpu().numpy().transpose(1, 2, 0))
 
         plt.tight_layout()
-        plt.savefig('figure/output.png')
+        plt.savefig('figure/output%02d.png' % (index))
 
-        break
+        if index == 3:
+            break
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

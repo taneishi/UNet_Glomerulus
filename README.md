@@ -29,7 +29,11 @@ The architecture contains two paths, encoder and decoder, and keeps the location
 
 ## Results
 
-<img src="figure/output.png" width="500" alt="output" />
+<img src="figure/output01.png" width="500" alt="output01" />
+
+<img src="figure/output02.png" width="500" alt="output02" />
+
+<img src="figure/output03.png" width="500" alt="output03" />
 
 ## References 
 
