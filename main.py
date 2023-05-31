@@ -95,12 +95,18 @@ def main(args):
         images = images.to(device)
         outputs = net(images)
         print(outputs.shape)
+
+        plt.figure(figsize=(12, 4))
+
         plt.subplot(1, 3, 1)
         plt.imshow(images[4].cpu().numpy().transpose(1, 2, 0))
+
         plt.subplot(1, 3, 2)
         plt.imshow(masks[4].numpy().transpose(1, 2, 0))
+
         plt.subplot(1, 3, 3)
         plt.imshow(outputs[4].detach().cpu().numpy().transpose(1, 2, 0))
+
         plt.tight_layout()
         plt.savefig('figure/output.png')
 
