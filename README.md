@@ -38,3 +38,6 @@ The architecture contains two paths, encoder and decoder, and keeps the location
 ## References 
 
 - [HuBMAP - Hacking the Kidney](https://www.kaggle.com/c/hubmap-kidney-segmentation)
+- [Naoto Usuyama, PyTorch-UNet](https://github.com/usuyama/pytorch-unet) for U-Net, FCN and synthetic image generation.
+- [Ronneberger et al., U-Net: Convolutional Networks for Biomedical Image Segmentation](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/)
+- [Long et al., Fully Convolutional Networks for Semantic Segmentation](https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf)

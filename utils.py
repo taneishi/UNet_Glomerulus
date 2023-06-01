@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
@@ -143,7 +144,7 @@ def masks_to_colorimg(masks):
 def test_sim(test_loader, device, net, args):
     net.eval() # Set model to evaluate mode
     # Get a batch of training data
-    for inputs, masks in test_dataloader:
+    for inputs, masks in test_loader:
         for name, x  in [('input', inputs.numpy()), ('masks', masks.numpy())]:
             print('%s %s' % (name, x.shape), end='')
             print(' min %5.3f max %5.3f mean %5.3f std %5.3f' % (x.min(), x.max(), x.mean(), x.std()))
