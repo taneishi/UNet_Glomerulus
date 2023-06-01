@@ -7,9 +7,9 @@ from torchvision import transforms
 import argparse
 import os
 
-import datasets
-import models
-from utils import train, test_sim
+from datasets import KidneyDataset
+from models import FCN
+from utils import train, test
 
 def main(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -17,20 +17,17 @@ def main(args):
 
     # use same transform for train/val for this example
     transform = transforms.Compose([
+        transforms.Resize(192),
         transforms.ToTensor(),
     ])
 
-    train_set = datasets.SimDataset(2000, transform=transform)
-    val_set = datasets.SimDataset(200, transform=transform)
-    test_set = datasets.SimDataset(3, transform=transform)
-
+    train_set = KidneyDataset('train', transform=transform)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True, num_workers=0)
-    val_loader =  DataLoader(val_set, batch_size=args.batch_size, shuffle=True, num_workers=0)
-    test_loader = DataLoader(test_set, batch_size=3, shuffle=False, num_workers=0)
 
-    print('train_set', len(train_set), 'val_set', len(val_set), 'test_set', len(test_set))
+    test_set = KidneyDataset('test', transform=transform)
+    test_loader = DataLoader(test_set, batch_size=5, shuffle=False, num_workers=0)
 
-    net = models.FCN(args.num_classes).to(device)
+    net = FCN(args.num_classes).to(device)
 
     if args.model_path and os.path.exists(args.model_path):
         # load model weights
@@ -42,13 +39,13 @@ def main(args):
     # Decay LR by a factor of 0.1 every step_size epochs
     scheduler = lr_scheduler.StepLR(optimizer, step_size=args.step_size, gamma=0.1)
 
-    net = train(train_loader, val_loader, device, net, optimizer, scheduler, args)
-    test_sim(test_loader, device, net, args)
+    net = train(train_loader, None, device, net, optimizer, scheduler, args)
+    test(test_loader, device, net, args)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', default=None, type=str)
-    parser.add_argument('--num_classes', default=6, type=int)
+    parser.add_argument('--num_classes', default=1, type=int)
     parser.add_argument('--step_size', default=7, type=int)
     parser.add_argument('--batch_size', default=10, type=int)
     parser.add_argument('--epochs', default=10, type=int)

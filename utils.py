@@ -30,17 +30,6 @@ def criterion(y_pred, y_true, metrics, bce_weight=0.5):
 
     return loss
 
-def reverse_transform(inp, normalization=False):
-    inp = inp.numpy().transpose((1, 2, 0))
-    if normalization:
-        mean = np.array([0.485, 0.456, 0.406])
-        std = np.array([0.229, 0.224, 0.225])
-        inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)
-    inp = (inp * 255).astype(np.uint8)
-
-    return inp
-
 def train(train_loader, val_loader, device, net, optimizer, scheduler, args):
     for epoch in range(args.epochs):
         start_time = timeit.default_timer()
@@ -116,73 +105,3 @@ def test(test_loader, device, net, args):
             break
 
     return net
-
-def plot_img_array(img_array, ncol=3):
-    nrow = len(img_array) // ncol
-
-    f, plots = plt.subplots(nrow, ncol, sharex='all', sharey='all', figsize=(ncol * 4, nrow * 4))
-
-    for i in range(len(img_array)):
-        plots[i // ncol, i % ncol]
-        plots[i // ncol, i % ncol].imshow(img_array[i])
-
-def masks_to_colorimg(masks):
-    colors = np.asarray([(201, 58, 64), (242, 207, 1), (0, 152, 75), (101, 172, 228),(56, 34, 132), (160, 194, 56)])
-
-    colorimg = np.ones((masks.shape[1], masks.shape[2], 3), dtype=np.float32) * 255
-    channels, height, width = masks.shape
-
-    for y in range(height):
-        for x in range(width):
-            selected_colors = colors[masks[:, y, x] > 0.5]
-
-            if len(selected_colors) > 0:
-                colorimg[y,x,:] = np.mean(selected_colors, axis=0)
-
-    return colorimg.astype(np.uint8)
-
-def test_sim(test_loader, device, net, args):
-    net.eval() # Set model to evaluate mode
-    # Get a batch of training data
-    for inputs, masks in test_loader:
-        for name, x  in [('input', inputs.numpy()), ('masks', masks.numpy())]:
-            print('%s %s' % (name, x.shape), end='')
-            print(' min %5.3f max %5.3f mean %5.3f std %5.3f' % (x.min(), x.max(), x.mean(), x.std()))
-
-        # Left: input image
-        plt.subplot(1, 2, 1)
-        # Change channel-order and make 3 channels
-        plt.imshow(reverse_transform(inputs[2]))
-
-        # Right: targer mask (ground-truth)
-        plt.subplot(1, 2, 2)
-        # Map each channel (i.e. class) to each color
-        plt.imshow(masks_to_colorimg(masks[2]))
-        plt.tight_layout()
-        plt.savefig('figure/input_sim.png')
-
-        inputs = inputs.to(device)
-        masks = masks.to(device)
-
-        # freeze backbone layers
-        with torch.no_grad():
-            pred = net(inputs)
-
-        pred = pred.data.cpu().numpy()
-
-        # Change channel-order and make 3 channels for matplot
-        input_images_rgb = [reverse_transform(x) for x in inputs.cpu()]
-
-        # Map each channel (i.e. class) to each color
-        target_masks_rgb = [masks_to_colorimg(x) for x in masks.cpu().numpy()]
-        pred_rgb = [masks_to_colorimg(x) for x in pred]
-
-        filename = 'figure/output_sim.png'
-        img_arrays = [input_images_rgb, target_masks_rgb, pred_rgb]
-        flatten_list = reduce(lambda x,y: x+y, zip(*img_arrays))
-
-        plot_img_array(np.array(flatten_list), ncol=len(img_arrays))
-        plt.tight_layout()
-        plt.savefig(filename)
-
-        break

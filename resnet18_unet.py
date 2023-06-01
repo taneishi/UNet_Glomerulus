@@ -17,13 +17,9 @@ def main(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print('Using %s device.' % (device))
 
-    # use same transform for train/val for this example
-    #transform = transforms.Compose([
-    #    transforms.ToTensor(),
-    #    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # imagenet
-    #])
+    # use same transform for train/test set
     transform = transforms.Compose([
-        #transforms.Resize(192),
+        transforms.Resize(192),
         transforms.ToTensor(),
         #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]), # imagenet
     ])
