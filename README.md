@@ -4,11 +4,11 @@
 
 The *glomerulus* is one of biological substructures in a kidney, which physiologically functions to filter waste materials from the blood. Abnormalities in the glomerulus lead to a decrease in blood filtration performance, subsequently resulting in the development of kidney diseases such as *chronic kidney disease*, CKD.
 
-*Medical imaging* is an important method in diagnosing kidney diseases caused by glomerular abnormalities. For the kidney tissue image, a biopsy is taken from a patient's kidney by needle, then stained and imaged under a microscope. An example is shown in Figure 1.
+*Medical imaging* is an important method in diagnosing kidney diseases caused by glomerular abnormalities. For the kidney tissue image, a biopsy is taken from a patient's kidney by needle, then stained and imaged under a microscope. An example image is shown in Figure 1.
 
-![An exmaple of the overall view of the kidney tissue image.](figure/microscopic_image.png)
+![An example of the overall view of the kidney tissue image.](figure/microscopic_image.png)
 
-**Figure 1. An example of the overall view of the kidney tissue image used as the source for the analysis. The image is high resolution for diagnostic purposes and in the case of this image is provided in TIFF format with $18,484 \times 13,013$ pixels.**
+**Figure 1. An example of the overall view of the kidney tissue image used as the source for the analysis. The image is high resolution for diagnostic purposes and in the case of this image is provided in TIFF format with 18,484x13,013 pixels.**
 
 The pathologist observes the conditions of the glomeruli in the biopsy kidney tissue image obtained to diagnose kidney disease. The motivation is to perform the entire diagnostic process by computational methods, but as a preliminary step, we segment the kidney tissue images and construct a model to recognize the glomeruli.
 
