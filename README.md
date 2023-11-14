@@ -8,13 +8,13 @@ The *glomerulus* is one of biological substructures in a kidney, which physiolog
 
 ![An exmaple of the overall view of the kidney tissue image.](figure/microscopic_image.png)
 
-**Figure 1. An example of the overall view of the kidney tissue image used as the source for the analysis. The image is high resolution for diagnostic purposes and in the case of this image is provided in TIFF format with 18,484$\times$13,013 pixels.**
+**Figure 1. An example of the overall view of the kidney tissue image used as the source for the analysis. The image is high resolution for diagnostic purposes and in the case of this image is provided in TIFF format with $18,484 \times 13,013$ pixels.**
 
 The pathologist observes the conditions of the glomeruli in the biopsy kidney tissue image obtained to diagnose kidney disease. The motivation is to perform the entire diagnostic process by computational methods, but as a preliminary step, we segment the kidney tissue images and construct a model to recognize the glomeruli.
 
 ## Dataset
 
-The dataset is based on kidney tissue images provided by *The Human BioMolecular Atlas Program*, HuBMAP, and the corresponding annotations indicating glomerular segmentation[HuBMAP]. The kidney tissue images in the HuBMAP dataset consisted of 20 biopsies, 11 of which were fixed by *fresh frozen* and 9 of which by *formalin fixed paraffin embedded*, and then stained with *periodic acid-Schiff*, PAS. Of this biopsies, i.e., kidney tissue images, 8 were used for training, 5 for validation, and the remaining 7 were unused for testing.
+The dataset is based on kidney tissue images provided by *The Human BioMolecular Atlas Program*, HuBMAP, and the corresponding annotations indicating glomerular segmentation[HuBMAP]. The kidney tissue images in the HuBMAP dataset consisted of 20 biopsies, 11 of which were fixed by *fresh frozen* and 9 of which by *formalin fixed paraffin embedded*, and then stained with *periodic acid-Schiff*, PAS. Of these biopsies, i.e., kidney tissue images, 8 were used for training, 5 for validation, and the remaining 7 were unused for testing.
 
 The annotations indicating the segmentation of the glomeruli is provided as a binary image in which each pixel of the corresponding kidney tissue image is replaced by a classification label with 1 for the pixels in the glomerulus and 0 for the other pixels. This binary image is referred to as the *mask*.
 
@@ -42,20 +42,21 @@ The architecture of U-Net consists of two pathes: *encoder* and *decoder*. The e
 
 ## Implementation in Python
 
-For training and validation of U-Net, we used an implementation in a DL package in Python, `PyTorch`[Usuyama].
+For training and validation of U-Net, we used an implementation in a DL package in Python, `PyTorch`.
+This implementation was based on by [Usuyama].
 
 ## Results
 
 We obtained Dice coefficients of 0.880 for training and 0.794 for validation.
 Examples of the patch as input to U-Net, the output predicted mask, and the true mask corresponding to the input patch are shown in Figure 3.
 
-![Patch as input.](figures/source.png)
-![Output predicted mask.](figures/predicted.png)
-![Corresponding true mask.](figures/mask.png)
+![Patch as input.](figure/source.png)
+![Output predicted mask.](figure/predicted.png)
+![Corresponding true mask.](figure/mask.png)
 
 **Figure 3. Examples of the patch as input to U-Net, the output predicted mask, and the true mask corresponding to the input patch.**
 
-# Furthermore
+## Furthermore
 
 The application of U-Net has shown the potential for glomerular segmentation. To achieve higher accuracy, more images should be used for training, and optimization and fine-tuning of the model to kidney tissue images will be needed.
 
@@ -66,4 +67,4 @@ Glomerular segmentation from kidney tissue images is the first step in automatin
 - [HuBMAP] HuBMAP Consortium, *The human body at cellular resolution: the NIH Human Biomolecular Atlas Program*, **Nature**, 574, 187–192, 2019.
 - [Dice] L.R. Dice, *Measures of the Amount of Ecologic Association Between Species*, **Ecology**, 26, 3, 297–302, 1945.
 - [Ronneberger] O. Ronneberger et al., *U-Net: Convolutional Networks for Biomedical Image Segmentation*, **arXiv**, 2015.
-- [Usuyama] N. Usuyama, *Simple PyTorch Implementations of U-Net/FullyConvNet for Image Segmentation*, [GitHub](https://github.com/usuyama/pytorch-unet).
+- [Usuyama] N. Usuyama, *Simple PyTorch Implementations of U-Net/FullyConvNet for Image Segmentation*, [**GitHub**](https://github.com/usuyama/pytorch-unet).
