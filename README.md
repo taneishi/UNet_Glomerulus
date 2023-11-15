@@ -8,7 +8,7 @@ The *glomerulus* is one of biological substructures in a kidney, which physiolog
 
 ![An example of the overall view of the kidney tissue image.](figure/microscopic_image.png)
 
-**Figure 1. An example of the overall view of the kidney tissue image used as the source for the analysis. The image is high resolution for diagnostic purposes and in the case of this image is provided in TIFF format with 18,484x13,013 pixels.**
+**Figure 1. An example of the overall view of the kidney tissue image used as the source for the analysis. These images are high resolution for diagnostic purposes and in the case of this image is provided in TIFF format with (18,484, 13,013) pixels.**
 
 The pathologist observes the conditions of the glomeruli in the biopsy kidney tissue image obtained to diagnose kidney disease. The motivation is to perform the entire diagnostic process by computational methods, but as a preliminary step, we segment the kidney tissue images and construct a model to recognize the glomeruli.
 
