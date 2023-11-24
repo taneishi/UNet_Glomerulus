@@ -16,7 +16,6 @@ def main(args):
         transforms.Resize(192),
         transforms.ToTensor(),
     ])
-    os.makedirs(args.figure_path, exist_ok=True)
 
     test_set = KidneyDataset('test', transform=transform)
     test_loader = DataLoader(test_set, batch_size=5, shuffle=False, num_workers=0)
@@ -30,10 +29,9 @@ def main(args):
     net.eval()
     for index, (images, masks) in enumerate(test_loader, 1):
         images = images.to(device)
+
         with torch.no_grad():
             outputs = net(images)
-
-        print(outputs.shape)
 
         plt.figure(figsize=(2.5, 2.5))
         plt.imshow(images[4].cpu().numpy().transpose(1, 2, 0))
@@ -56,12 +54,11 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', default=None, type=str)
-    parser.add_argument('--figure_path', default='figure', type=str)
     parser.add_argument('--num_classes', default=1, type=int)
+    parser.add_argument('--figure_path', default='figure', type=str)
     args = parser.parse_args()
     print(vars(args))
     
-    if args.model_path:
-        os.makedirs(os.path.dirname(args.model_path), exist_ok=True)
+    os.makedirs(args.figure_path, exist_ok=True)
 
     main(args)
